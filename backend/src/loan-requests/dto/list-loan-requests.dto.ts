@@ -5,7 +5,6 @@ export class ListLoanRequestsDto {
   // La conversión de la consulta a número ya está preparada.
   @Type(() => Number)
   @IsOptional()
-  @IsInt()
   @Min(1)
   toolId?: number;
 }
