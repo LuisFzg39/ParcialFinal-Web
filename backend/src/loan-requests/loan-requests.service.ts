@@ -12,9 +12,9 @@ export class LoanRequestsService {
     @InjectRepository(ToolEntity) private readonly tools: Repository<ToolEntity>,
   ) {}
 
-  findAll() {
+  findAll(toolId?: number) {
     // TODO BACK-A: recibir el filtro y aplicarlo en la consulta del repositorio.
-    return this.requests.find({ relations: { tool: true }, order: { id: "ASC" } });
+    return this.requests.find({ where: toolId ? { tool: { id: toolId } } : {}, relations: { tool: true }, order: { id: "ASC" } });
   }
 
   async findOne(id: number) {
