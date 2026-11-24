@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CreateLoanRequestDto } from "./dto/create-loan-request.dto";
@@ -28,6 +28,9 @@ export class LoanRequestsService {
     if (!tool) throw new NotFoundException("Tool not found.");
 
     // TODO BACK-B: aplicar la regla de duración antes de guardar la solicitud.
+    if (dto.days > tool.maxLoanDays) {
+      throw new ConflictException("The requested days exceed the allowed for this tool");
+    }
 
     const request = this.requests.create({ purpose: dto.purpose, days: dto.days, tool });
     return this.requests.save(request);

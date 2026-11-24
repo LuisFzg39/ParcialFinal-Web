@@ -16,19 +16,37 @@ export default async function LoanRequestsPage({ searchParams }: LoanRequestsPag
   const { toolId } = await searchParams;
   const path = toolId ? `/loan-requests?toolId=${encodeURIComponent(toolId)}` : "/loan-requests";
   const response = await apiFetch(path);
-  const  requests: LoanRequest[] = response.ok ? await response.json() : [];
+  const requests: LoanRequest[] = response.ok ? await response.json() : [];
 
   void searchParams;
   void tools;
 
   return (
+  
     <main>
       <h1>Loan requests</h1>
       <Link className="button" href="/loan-requests/new">New request</Link>
-      <section className="panel" aria-label="Loan requests">
-        <p>Complete the request list and its filter.</p>
-      </section>
+
+      <form action="/loan-requests">
+        <select name="toolId" defaultValue={toolId ?? ""}>
+          <option value="">All tools</option>
+          {tools.map((tool) => (
+            <option key={tool.id} value={tool.id}>{tool.name}</option>
+          ))}
+        </select>
+        <button type="submit">Filter</button>
+      </form>
+
+      {requests.map((request) => (
+        <div key={request.id}>
+          <p>{request.id} - {request.purpose} - {request.days} days - {request.tool.name}</p>
+          <Link className="button" href={`/loan-requests/${request.id}`}>View receipt</Link>
+        </div>
+      ))}
     </main>
+
+
+
   );
 }
 

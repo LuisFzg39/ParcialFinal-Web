@@ -22,6 +22,9 @@ async function createLoanRequest(formData: FormData) {
   }),
   });
 
+  if (response.status !== 201) return;
+  const created = await response.json();
+  redirect(`/loan-requests/${created.id}`);
 }
 
 export default async function NewLoanRequestPage() {
